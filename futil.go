@@ -2,13 +2,19 @@ package futil
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
-func InSql(length int) string {
-	var IDsStr []string
-	for i := 0; i < length; i++ {
-		IDsStr = append(IDsStr, "?")
+func InSQL[T int | int64 | int32 | int16 | int8 | string](IDs []T) string {
+	if reflect.TypeOf(IDs[0]) == reflect.TypeOf("") {
+		var strs []string
+		for i := 0; i < len(IDs); i++ {
+			str := fmt.Sprintf(`"%v"`, IDs[i])
+			strs = append(strs, str)
+		}
+		return fmt.Sprintf("(%s)", strings.Join(strs, ","))
 	}
-	return fmt.Sprintf("(%s)", strings.Join(IDsStr, ","))
+	jIDS := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(IDs)), ","), "[]")
+	return fmt.Sprintf("(%s)", jIDS)
 }
