@@ -1,7 +1,9 @@
 package futil
 
 import (
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -38,4 +40,10 @@ func TestInSQL(t *testing.T) {
 			assert.Equal(t, tt.exp, act)
 		})
 	}
+}
+
+func TestBenchmark(t *testing.T) {
+	stop := Benchmark()
+	time.Sleep(100 * time.Millisecond)
+	fmt.Println(stop())
 }
